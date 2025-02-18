@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderStyle: 'dashed',
     borderColor: '#E5E7EB',
+    width: 350,
   },
   image: {
     width: '100%',
@@ -165,16 +166,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   placeholderText: {
-    color: '#9CA3AF',
+    color: 'black',
+    opacity: 0.75,
     marginTop: 8,
   },
   captionContainer: {
+    width: 350,
     marginHorizontal: 16,
-    marginTop: 24,
+    marginTop: 50,
     marginBottom: 96,
   },
   captionInput: {
-    backgroundColor: '#F9FAFB',
+    borderColor: '#F5F5F5',
+    borderBottomWidth: 1,
     padding: 16,
     borderRadius: 12,
     fontSize: 16,
@@ -206,7 +210,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#000',
   },
   postButtonDisabled: {
     backgroundColor: '#93C5FD',

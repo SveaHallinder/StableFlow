@@ -19,11 +19,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 12,
+    marginTop: 25,
   },
   avatar: {
     width: 34,
     height: 34,
     borderRadius: 24,
+    marginLeft: 10,
   },
   username: {
     fontSize: 16,

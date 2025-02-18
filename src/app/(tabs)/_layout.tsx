@@ -44,7 +44,7 @@ export default function TabsLayout() {
             <Tabs.Screen 
                 name="profile" 
                 options={{ 
-                    headerTitle: 'Profile', 
+                    headerTitle: '', 
                     tabBarIcon: ({ color , focused }) => <FontAwesome6 name="user-circle" size={26} color={color} />, 
                 }} 
             />

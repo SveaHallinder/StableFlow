@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { Text, View, Image, Alert, TouchableOpacity, Modal } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useEffect, useState } from 'react';
@@ -10,6 +11,7 @@ import EditProfile from '~/src/app/EditProfile';
 import { thumbnail } from '@cloudinary/url-gen/actions/resize';
 import { useRouter } from 'expo-router';
 import { StyleSheet } from 'react-native';
+import React from 'react';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -30,6 +32,15 @@ export default function ProfileScreen() {
     }
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if (user) {
+        getProfile();
+      }
+    }, [user])
+  );
+  
+
   const getProfile = async () => {
     const { data, error } = await supabase
       .from('profiles')
@@ -48,93 +59,6 @@ export default function ProfileScreen() {
     setRidingDays(data.ridingDays || '');
     setInitials(data.initials || '');
     setAvatarUrl(data.avatar_url);
-  };
-
-  
-  const updateAvatar = async (uri: string) => {
-    try {
-  
-      // Förminska bilden lokalt
-      const manipulatedImage = await ImageManipulator.manipulateAsync(
-        uri,
-        [{ resize: { width: 800 } }], // Ändra storlek (bredare bilder kan skalas ned)
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG } // Komprimera
-      );
-  
-  
-      // Ladda upp den komprimerade bilden till Cloudinary
-      const uploadedImage = await uploadImage(manipulatedImage.uri);
-      const avatarUrl = uploadedImage.secure_url;
-  
-      // Optimera bilden med Cloudinarys thumbnail-funktion
-      let remoteCldImageUrl;
-      if (avatarUrl) {
-        const remoteCldImage = cld.image(avatarUrl);
-        remoteCldImage.resize(thumbnail().width(300).height(300));
-        remoteCldImageUrl = remoteCldImage.toURL();
-      }
-  
-      // Uppdatera avatar-URL i Supabase
-      const { error } = await supabase
-        .from('profiles')
-        .update({ avatar_url: remoteCldImageUrl || avatarUrl })
-        .eq('id', user?.id);
-  
-      if (error) {
-        console.error('Supabase update error:', error);
-        throw new Error('Failed to update profile avatar in database');
-      }
-      const handleSave = async () => {
-
-        const updatedData = {
-          id: userId,
-          avatar_url: avatarUrl,
-        };
-    
-        try {
-          // Uppdatera profilen via Supabase
-          const { error } = await supabase
-            .from("profiles")
-            .update(updatedData)
-            .eq("id", userId);
-    
-          if (error) {
-            console.error("Error updating profile:", error);
-            Alert.alert("Error", "Could not update profile");
-            return;
-          }
-    
-          getProfile();
-        } catch (error) {
-          console.error("Unexpected error:", error);
-          Alert.alert("Error", "An unexpected error occurred");
-        }
-      };
-  
-      handleSave();
-      // Uppdatera lokal state
-      setAvatarUrl(remoteCldImageUrl || avatarUrl);
-      setImage(null);
-  
-      Alert.alert('Avatar updated successfully!');
-    } catch (err) {
-      console.error('Error updating avatar:', err);
-      Alert.alert('Error updating avatar');
-    }
-  };
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-    
-    if (!result.canceled) {
-      updateAvatar(result.assets[0].uri);
-    }
   };
 
 
@@ -161,12 +85,6 @@ export default function ProfileScreen() {
           ) : (
             <View style={styles.imagePlaceholder} />
           )}
-          <TouchableOpacity 
-            onPress={pickImage}
-            style={styles.editImageButton}
-          >
-            <Feather name="edit-2" size={18} color="white" />
-          </TouchableOpacity>
         </View>
 
         {/* Username */}
@@ -277,7 +195,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     paddingHorizontal: 16,
-    paddingTop: 8,
+    paddingTop: 0,
+    marginTop: 0,
   },
   editButton: {
     padding: 8,
@@ -287,15 +206,16 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: 'relative',
+    marginTop: -10,
   },
   profileImage: {
-    width: 128,
-    height: 128,
+    width: 100,
+    height: 100,
     borderRadius: 64,
   },
   imagePlaceholder: {
-    width: 128,
-    height: 128,
+    width: 100,
+    height: 100,
     borderRadius: 64,
     backgroundColor: '#E5E7EB',
   },
@@ -317,7 +237,8 @@ const styles = StyleSheet.create({
     shadowRadius: 1.5,
   },
   username: {
-    fontSize: 24,
+    fontSize: 18,
+    fontWeight: 500,
     marginTop: 16,
     marginBottom: 32,
   },
@@ -332,7 +253,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statValue: {
-    fontSize: 18,
+    fontSize: 16,
   },
   statLabel: {
     fontSize: 14,
@@ -351,7 +272,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     borderRadius: 8,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#000',
   },
   messageButtonText: {
     textAlign: 'center',
