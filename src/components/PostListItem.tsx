@@ -1,6 +1,7 @@
 import {
   View,
   TouchableWithoutFeedback,
+  StyleSheet,
 } from 'react-native';
 import PostContent from './PostContent';
 import CommentModal from './CommentModal';
@@ -41,12 +42,12 @@ export default function PostListItem({ post }: { post: Post & { likes: { created
   const { handleDoubleTap, animatedHeartStyle } = useDoubleTapAnimation();
 
   return (
-    <View className="bg-white rounded-lg my-2">
+    <View style={styles.container}>
       <PostHeader user={post.user} />
       <PostCaption caption={post.caption} />
       
       <TouchableWithoutFeedback onPress={() => handleDoubleTap(handleLike)}>
-        <View>
+        <View style={styles.contentContainer}>
           <PostContent post={post} />
           <AnimatedHeart style={animatedHeartStyle} />
         </View>
@@ -69,3 +70,14 @@ export default function PostListItem({ post }: { post: Post & { likes: { created
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    marginVertical: 8,
+  },
+  contentContainer: {
+    // Här kan du lägga till specifik styling för innehållsbehållaren om det behövs
+  },
+});

@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   Alert,
+  StyleSheet,
 } from "react-native";
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -75,32 +76,32 @@ export default function NewPost() {
   };
 
   return (
-    <View className="flex-1 bg-white pt-5">
+    <View style={styles.container}>
 
-      <ScrollView className="flex-1">
+      <ScrollView style={styles.scrollView}>
         {/* Image Picker */}
         <TouchableOpacity 
           onPress={pickImage}
-          className="mx-4 mt-6 h-48 bg-gray-50 rounded-xl items-center justify-center border-2 border-dashed border-gray-200"
+          style={styles.imagePicker}
         >
           {image ? (
             <Image 
               source={{ uri: image }} 
-              className="w-full h-full rounded-xl"
+              style={styles.image}
               resizeMode="cover"
             />
           ) : (
-            <View className="items-center">
+            <View style={styles.imagePlaceholder}>
               <Feather name="image" size={32} color="#9CA3AF" />
-              <Text className="text-gray-400 mt-2">Tap to add photo</Text>
+              <Text style={styles.placeholderText}>Tap to add photo</Text>
             </View>
           )}
         </TouchableOpacity>
 
         {/* Caption Input */}
-        <View className="mx-4 mt-6 mb-24">
+        <View style={styles.captionContainer}>
           <TextInput
-            className="bg-gray-50 p-4 rounded-xl text-base"
+            style={styles.captionInput}
             value={caption}
             onChangeText={setCaption}
             placeholder="Skriv en bildtext..."
@@ -113,19 +114,19 @@ export default function NewPost() {
       </ScrollView>
 
       {/* Bottom Action Buttons */}
-      <View className="absolute bottom-0 left-0 right-0 bg-white px-4 py-3 gap-4 flex-row space-x-3">
+      <View style={styles.buttonContainer}>
         <TouchableOpacity 
           onPress={() => router.back()}
-          className="flex-1 py-3 rounded-lg border border-gray-200"
+          style={styles.cancelButton}
         >
-          <Text className="text-center text-gray-700 font-medium">Avbryt</Text>
+          <Text style={styles.cancelButtonText}>Avbryt</Text>
         </TouchableOpacity>
         <TouchableOpacity 
           onPress={handlePost}
           disabled={isPosting}
-          className={`flex-1 py-3 rounded-lg ${isPosting ? 'bg-blue-300' : 'bg-blue-500'}`}
+          style={[styles.postButton, isPosting && styles.postButtonDisabled]}
         >
-          <Text className="text-center text-white font-medium">
+          <Text style={styles.postButtonText}>
             {isPosting ? 'Postar...' : 'Posta'}
           </Text>
         </TouchableOpacity>
@@ -133,3 +134,86 @@ export default function NewPost() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    paddingTop: 20,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  imagePicker: {
+    marginHorizontal: 16,
+    marginTop: 24,
+    height: 192,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderColor: '#E5E7EB',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 12,
+  },
+  imagePlaceholder: {
+    alignItems: 'center',
+  },
+  placeholderText: {
+    color: '#9CA3AF',
+    marginTop: 8,
+  },
+  captionContainer: {
+    marginHorizontal: 16,
+    marginTop: 24,
+    marginBottom: 96,
+  },
+  captionInput: {
+    backgroundColor: '#F9FAFB',
+    padding: 16,
+    borderRadius: 12,
+    fontSize: 16,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    gap: 12,
+  },
+  cancelButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  cancelButtonText: {
+    textAlign: 'center',
+    color: '#4B5563',
+    fontWeight: '500',
+  },
+  postButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: '#3B82F6',
+  },
+  postButtonDisabled: {
+    backgroundColor: '#93C5FD',
+  },
+  postButtonText: {
+    textAlign: 'center',
+    color: 'white',
+    fontWeight: '500',
+  },
+});

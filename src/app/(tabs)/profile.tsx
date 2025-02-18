@@ -9,6 +9,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import EditProfile from '~/src/app/EditProfile';
 import { thumbnail } from '@cloudinary/url-gen/actions/resize';
 import { useRouter } from 'expo-router';
+import { StyleSheet } from 'react-native';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -138,65 +139,71 @@ export default function ProfileScreen() {
 
 
   return (
-    <View className="flex-1 bg-white">
-      <View className="flex-row justify-end px-4 pt-2">
+    <View style={styles.container}>
+      <View style={styles.header}>
         <TouchableOpacity 
           onPress={() => setIsEditing(true)}
-          className="p-2"
+          style={styles.editButton}
         >
           <Feather name="more-horizontal" size={24} color="#000" />
         </TouchableOpacity>
       </View>
 
       {/* Main Content */}
-      <View className="items-center">
+      <View style={styles.content}>
         {/* Profile Image */}
-        <View className="relative">
+        <View style={styles.imageContainer}>
           {image || avatarUrl ? (
             <Image
               source={{ uri: (image || avatarUrl) ?? undefined }}
-              className="w-32 h-32 rounded-full"
+              style={styles.profileImage}
             />
           ) : (
-            <View className="w-32 h-32 rounded-full bg-gray-100" />
+            <View style={styles.imagePlaceholder} />
           )}
           <TouchableOpacity 
             onPress={pickImage}
-            className="absolute bottom-1.5 right-1.5 bg-blue-500 w-9 h-9 rounded-full items-center justify-center border-[3px] border-white shadow-sm"
+            style={styles.editImageButton}
           >
             <Feather name="edit-2" size={18} color="white" />
           </TouchableOpacity>
         </View>
 
         {/* Username */}
-        <Text className="text-2xl mt-4 mb-8">
+        <Text style={styles.username}>
           {username || 'Svea'}
         </Text>
 
         {/* Stats */}
-        <View className="flex-row justify-around w-full px-8 mb-8">
-          <View className="items-center">
-            <Text className="text-lg">{initials || 'SH'}</Text>
-            <Text className="text-sm text-gray-400 mt-1">Initialer</Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>
+              {initials || 'SH'}
+            </Text>
+            <Text style={styles.statLabel}>Initialer</Text>
           </View>
-          <View className="items-center">
-            <Text className="text-lg">{horse || 'Kanel'}</Text>
-            <Text className="text-sm text-gray-400 mt-1">Häst</Text>
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>
+              {horse || 'Kanel'}
+            </Text>
+            <Text style={styles.statLabel}>Häst</Text>
           </View>
-          <View className="items-center">
-            <Text className="text-lg">{ridingDays || 'Mån, Fre, Lör'}</Text>
-            <Text className="text-sm text-gray-400 mt-1">Riddag</Text>
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>
+              {ridingDays || 'Mån, Fre, Lör'}
+            </Text>
+            <Text style={styles.statLabel}>Riddag</Text>
           </View>
         </View>
 
         {/* Action Buttons */}
-        <View className="w-full px-6">
-          <View className="flex-row gap-4">
-            <TouchableOpacity className="flex-1 py-2.5 rounded-lg bg-blue-500">
-              <Text className="text-center text-base font-medium text-white">Meddelande</Text>
+        <View style={styles.actionButtons}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.messageButton}>
+              <Text style={styles.messageButtonText}>Meddelande</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="flex-1 py-2.5 rounded-lg border border-gray-200">
-              <Text className="text-center text-base font-medium text-gray-700">Dela profil</Text>
+            <TouchableOpacity style={styles.shareButton}>
+              <Text style={styles.shareButtonText}>Dela profil</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -211,16 +218,16 @@ export default function ProfileScreen() {
         <TouchableOpacity 
           activeOpacity={1} 
           onPress={() => setIsEditing(false)} 
-          className="flex-1 bg-black/50 justify-end"
+          style={styles.modalBackground}
         >
           <TouchableOpacity 
             activeOpacity={1}
             onPress={e => e.stopPropagation()} 
-            className="bg-white rounded-t-3xl"
+            style={styles.modalContainer}
           >
-            <View className="w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-4" />
+            <View style={styles.modalHandle} />
             
-            <View className="px-6 pb-10 space-y-4">
+            <View style={styles.modalContent}>
               <TouchableOpacity 
                 onPress={() => {
                   setIsEditing(false);
@@ -235,23 +242,23 @@ export default function ProfileScreen() {
                     }
                   });
                 }} 
-                className="flex-row items-center py-3"
+                style={styles.modalOption}
               >
                 <Feather name="edit-2" size={22} color="#000" />
-                <Text className="text-lg ml-4">Edit Profile</Text>
+                <Text style={styles.modalOptionText}>Edit Profile</Text>
               </TouchableOpacity>
               
-              <TouchableOpacity className="flex-row items-center py-3">
+              <TouchableOpacity style={styles.modalOption}>
                 <Feather name="settings" size={22} color="#000" />
-                <Text className="text-lg ml-4">Settings</Text>
+                <Text style={styles.modalOptionText}>Settings</Text>
               </TouchableOpacity>
               
               <TouchableOpacity 
                 onPress={() => supabase.auth.signOut()}
-                className="flex-row items-center py-3"
+                style={styles.modalOption}
               >
                 <Feather name="log-out" size={22} color="#FF3B30" />
-                <Text className="text-lg ml-4 text-red-500">Sign Out</Text>
+                <Text style={styles.modalOptionText}>Sign Out</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -260,3 +267,140 @@ export default function ProfileScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  editButton: {
+    padding: 8,
+  },
+  content: {
+    alignItems: 'center',
+  },
+  imageContainer: {
+    position: 'relative',
+  },
+  profileImage: {
+    width: 128,
+    height: 128,
+    borderRadius: 64,
+  },
+  imagePlaceholder: {
+    width: 128,
+    height: 128,
+    borderRadius: 64,
+    backgroundColor: '#E5E7EB',
+  },
+  editImageButton: {
+    position: 'absolute',
+    bottom: 6,
+    right: 6,
+    backgroundColor: '#3B82F6',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
+  },
+  username: {
+    fontSize: 24,
+    marginTop: 16,
+    marginBottom: 32,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    paddingHorizontal: 32,
+    marginBottom: 32,
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statValue: {
+    fontSize: 18,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    marginTop: 4,
+  },
+  actionButtons: {
+    width: '100%',
+    paddingHorizontal: 24,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  messageButton: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 8,
+    backgroundColor: '#3B82F6',
+  },
+  messageButtonText: {
+    textAlign: 'center',
+    color: 'white',
+    fontWeight: '500',
+  },
+  shareButton: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  shareButtonText: {
+    textAlign: 'center',
+    color: '#4B5563',
+    fontWeight: '500',
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+  },
+  modalHandle: {
+    width: 48,
+    height: 4,
+    backgroundColor: '#D1D5DB',
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 16,
+  },
+  modalContent: {
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+    gap: 16,
+  },
+  modalOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  modalOptionText: {
+    fontSize: 18,
+    marginLeft: 16,
+  },
+});
