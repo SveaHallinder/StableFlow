@@ -1,0 +1,116 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@expo/server": {
+      "name": "@expo/server",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "@remix-run/node"
+      ],
+      "effects": [
+        "expo-router"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@expo/server"
+      ],
+      "fixAvailable": true
+    },
+    "@remix-run/node": {
+      "name": "@remix-run/node",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "@remix-run/server-runtime"
+      ],
+      "effects": [
+        "@expo/server"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@remix-run/node"
+      ],
+      "fixAvailable": true
+    },
+    "@remix-run/server-runtime": {
+      "name": "@remix-run/server-runtime",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "cookie"
+      ],
+      "effects": [
+        "@remix-run/node"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@remix-run/server-runtime"
+      ],
+      "fixAvailable": true
+    },
+    "cookie": {
+      "name": "cookie",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1099846,
+          "name": "cookie",
+          "dependency": "cookie",
+          "title": "cookie accepts cookie name, path, and domain with out of bounds characters",
+          "url": "https://github.com/advisories/GHSA-pxg6-pf52-xh8x",
+          "severity": "low",
+          "cwe": [
+            "CWE-74"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<0.7.0"
+        }
+      ],
+      "effects": [
+        "@remix-run/server-runtime"
+      ],
+      "range": "<0.7.0",
+      "nodes": [
+        "node_modules/cookie"
+      ],
+      "fixAvailable": true
+    },
+    "expo-router": {
+      "name": "expo-router",
+      "severity": "low",
+      "isDirect": true,
+      "via": [
+        "@expo/server"
+      ],
+      "effects": [],
+      "range": "<=0.0.1-canary-20240418-8d74597 || >=3.1.1",
+      "nodes": [
+        "node_modules/expo-router"
+      ],
+      "fixAvailable": true
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 5,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 5
+    },
+    "dependencies": {
+      "prod": 1111,
+      "dev": 374,
+      "optional": 15,
+      "peer": 146,
+      "peerOptional": 0,
+      "total": 1498
+    }
+  }
+}
